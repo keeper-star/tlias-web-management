@@ -147,10 +147,10 @@ where 与 having 的区别:
 
 
 16.Mybatis中的动态SQL
-- <if>：根据条件判断是否拼接对应的SQL片段 。
-- <where>：自动处理WHERE关键字 和 并且会自动去除第一个条件前面多余的 AND/OR。
-- <set>: 用在update语句中，用来替换set关键字，并且会自动去除更新字段后面多余的逗号。
-- <foreach>: 循环遍历。
+- if：根据条件判断是否拼接对应的SQL片段 。
+- where：自动处理WHERE关键字 和 并且会自动去除第一个条件前面多余的 AND/OR。
+- set: 用在update语句中，用来替换set关键字，并且会自动去除更新字段后面多余的逗号。
+- foreach: 循环遍历。
   - collection
   - item
   - sepearator
@@ -260,7 +260,12 @@ Session：
         - 过滤器的拦截范围更大，它可以拦截Web服务器中所有的资源。
         - 拦截器只能拦截Spring中的资源（主要是控制器中的方法）。
 
-
+23.数据库的增删改查：
+  insert into  表名 (....,....,...)  value (...,...,...);
+  delet ... from 表名;
+  update 表名 set ......=....... ，....=..... ;
+  select * from 表名;
+  
 
 
 
