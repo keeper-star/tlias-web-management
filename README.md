@@ -262,10 +262,13 @@ Session：
 
 23.数据库的增删改查：
 
-  insert into  表名 (....,....,...)  value (...,...,...);
-  delet ... from 表名;
-  update 表名 set ......=....... ，....=..... ;
-  select * from 表名;
+    insert into  表名 (....,....,...)  value (...,...,...);
+    
+    delet ... from 表名;
+    
+    update 表名 set ......=....... ，....=..... ;
+    
+    select * from 表名;
   
 
 
