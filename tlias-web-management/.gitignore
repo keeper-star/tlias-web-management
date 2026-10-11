@@ -1,0 +1,11 @@
+#IDEA配置
+.idea/
+*.iml
+out/
+target/
+#编译class
+*.class
+#日志
+*.log
+
+

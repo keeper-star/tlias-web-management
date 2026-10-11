@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.itheima.mapper.StudentMapper">
+
+    <!-- 增加学生信息 -->
+    <insert id="add" parameterType="com.itheima.pojo.Student">
+        insert into student (name, no, gender, phone, id_card, is_college, address, degree, graduation_date, clazz_id, update_time)
+        values (#{name}, #{no}, #{gender}, #{phone}, #{idCard}, #{isCollege}, #{address}, #{degree}, #{graduationDate}, #{clazzId}, now())
+    </insert>
+
+    <!-- 根据id批量删除学生信息 -->
+    <delete id="delete" parameterType="com.itheima.pojo.Student">
+        delete from student where id in
+        <foreach item="id" collection="ids" separator="," open="(" close=")"> <!-- 遍历ids集合，将每个id作为参数 -->
+            #{id}
+        </foreach>
+    </delete>
+
+    <!-- 根据查询条件分页查询学生信息 -->
+    <select id="findStudent" resultType="com.itheima.pojo.Student">
+        select s.* , c.name as clazzName from student s left join clazz c  on c.id = s.clazz_id
+         <where>
+            <if test="name != null and name != ''">
+                and s.name like CONCAT('%', #{name}, '%')
+            </if>
+             <if test="degree !=null">
+                 and s.degree = #{degree}
+             </if>
+             <if test="clazzId != null">
+                 and s.clazz_id = #{clazzId}
+             </if>
+         </where>
+    </select>
+
+    <!-- 根据id查询学生信息 -->
+    <select id="query" resultType="com.itheima.pojo.Student">
+        select * from student where id = #{id}
+    </select>
+
+    <!-- 修改学生信息 -->
+    <update id="update" parameterType="com.itheima.pojo.Student">
+        update student
+            <set>
+                <if test="name != null and name != ''">
+                    name = #{name},
+                </if>
+                <if test="no != null and no != ''">
+                    no = #{no},
+                </if>
+                <if test="gender != null">
+                    gender = #{gender},
+                </if>
+                <if test="phone != null and phone != ''">
+                    phone = #{phone},
+                </if>
+                <if test="idCard != null and idCard != ''">
+                    id_card = #{idCard},
+                </if>
+                <if test="isCollege != null">
+                    is_college = #{isCollege},
+                </if>
+                <if test="address != null and address != ''">
+                    address = #{address},
+                </if>
+                <if test="degree != null">
+                    degree = #{degree},
+                </if>
+                <if test="graduationDate != null">
+                    graduation_date = #{graduationDate},
+                </if>
+                <if test="violationCount != null">
+                    violation_count = #{violationCount},
+                </if>
+                <if test="violationScore != null">
+                    violation_score = #{violationScore},
+                </if>
+                <if test="clazzId != null">
+                    clazz_id = #{clazzId},
+                </if>
+                update_time = now()
+            </set>
+        where id = #{id}
+    </update>
+
+    <!-- 处理学生违规信息 -->
+    <update id="handleViolation" parameterType="com.itheima.pojo.Student">
+        update student
+            set violation_score = violation_score+#{score},
+                <if test="score != 0">
+                    violation_count = violation_count+1
+                </if>
+        where id = #{id}
+    </update>
+
+    <!-- 统计学员学历人数 -->
+    <select id="getStudentDegreeData" resultType="java.util.Map">
+        select
+            case   when degree=1 then '初中'
+                   when degree=2 then '高中'
+                   when degree=3 then '大专'
+                   when degree=4 then '本科'
+                   when degree=5 then '硕士'
+                   when degree=6 then '博士' else '其他' end name,
+            count(*) value
+        from student group by degree
+    </select>
+</mapper>

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.itheima.mapper.ClazzMapper">
+
+    <!-- 新增班级 -->
+    <insert id="insertClazz">
+        insert into clazz (name, room, begin_date, end_date, master_id, subject,update_time)
+        values (#{name}, #{room}, #{beginDate}, #{endDate}, #{masterId}, #{subject}, now())
+    </insert>
+
+    <!-- 删除班级 -->
+    <delete id="delete">
+        delete from clazz where id = #{id}
+    </delete>
+
+    <!-- 根据id查询班级数据 -->
+    <select id="get" resultType="com.itheima.pojo.Clazz">
+        select c.*, e.name as master_name from clazz c left join emp e on c.master_id=e.id where c.id=#{id}
+    </select>
+
+    <!-- 查询所有数据 -->
+    <select id="list" resultType="com.itheima.pojo.Clazz">
+        select c.*,
+               e.name as master_name,
+        case
+            when now() &gt; c.end_date  then '已结课'
+            when now() &lt; c.begin_date then '未开班'
+            else '在读中'
+        end as status
+        from clazz c  left join emp e on c.master_id=e.id
+            <where>
+                <if test="name != null and name != ''">
+                    and c.name like concat('%', #{name}, '%')
+                </if>
+                <if test="begin != null and end != null">
+                    and c.end_date between #{begin} and #{end}
+                </if>
+            </where>
+    </select>
+
+    <!-- 修改班级 -->
+    <update id="update">
+        update clazz
+        <set>   <!-- 使用<set>标签会自动处理逗号问题 -->
+            <!--动态sql-->
+            <if test="name != null and name != ''">   <!--  如果name属性不为空且不为空字符串，则更新name字段-->
+                name = #{name},
+            </if>
+            <if test="room != null and room != ''">  <!--  如果room属性不为空且不为空字符串，则更新room字段-->
+                room = #{room},
+            </if>
+            <if test="beginDate != null">     <!-- 如果beginDate属性不为空，则更新beginDate字段-->
+                begin_date = #{beginDate},
+            </if>
+            <if test="endDate != null">     <!-- 如果endDate属性不为空，则更新endDate字段-->
+                end_date = #{endDate},
+            </if>
+            <if test="masterId != null">    <!--  如果masterId属性不为空，则更新masterId字段-->
+                master_id = #{masterId},
+            </if>
+            <if test="subject != null">       <!--   如果subject属性不为空，则更新subject字段-->
+                subject = #{subject},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!-- 查询所有班级数据 -->
+    <select id="listAllClazz" resultType="com.itheima.pojo.Clazz">
+        select * from clazz
+    </select>
+
+    <!-- 查询班级人数 -->
+    <select id="getClazzData" resultType="java.util.Map">
+        select
+            c.name as pos,
+            Count(s.id) as num
+        from clazz c left join student s on s.clazz_id=c.id group by c.id order by num
+    </select>
+</mapper>
