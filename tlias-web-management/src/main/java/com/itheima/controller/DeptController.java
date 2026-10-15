@@ -1,5 +1,6 @@
 package com.itheima.controller;
 
+import com.itheima.anno.Log;
 import com.itheima.pojo.Dept;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ public class DeptController {
     /**
      * 查询所有部门数据
      */
+    @Log
      @GetMapping("/depts")
      public Result list(){
 
@@ -32,6 +34,7 @@ public class DeptController {
      * 注意事项：一旦声明了@RequestParam，就一定要传递参数，否则会报错（默认required是true） 如果不传递，可以设置required为false
      * 方式二：可以省略@RequestParam，但需要将参数名和方法参数名一致
      */
+    @Log
      @DeleteMapping("/depts")
      public Result delete(@RequestParam(value = "id",required = false) Integer deptId){
 
@@ -43,6 +46,7 @@ public class DeptController {
     /**
      * 添加部门数据 @RequestBody 表示接收请求体中的数据 可以接收JSON数据
      */
+    @Log
     @PostMapping("/depts")
     public Result add(@RequestBody Dept dept){
 
@@ -54,6 +58,7 @@ public class DeptController {
     /**
      * 根据ID查询部门数据 @PathVariable 表示接收路径中的参数 可以省略@PathVariable，但需要将参数名和方法参数名一致
      */
+    @Log
     @GetMapping("/depts/{id}")
     public Result getInfo(@PathVariable("id") Integer id){
 
@@ -65,6 +70,7 @@ public class DeptController {
     /**
      * 修改部门数据 @RequestBody 表示接收请求体中的数据 可以接收JSON数据
      */
+    @Log
     @PutMapping("/depts")
     public Result update(@RequestBody Dept dept){
 
